@@ -1,10 +1,12 @@
 {
-  "name": "express-reservation",
+  "name": "express-store",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kiramidru/express-reservation.git"
@@ -12,8 +14,17 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kiramidru/express-reservation/issues"
+    "url": "https://github.com/kiramidru/express-store/issues"
   },
-  "homepage": "https://github.com/kiramidru/express-reservation#readme",
-  "description": ""
+  "homepage": "https://github.com/kiramidru/express-store#readme",
+  "description": "",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "dotenv": "^17.0.1",
+    "express": "^5.1.0",
+    "firebase": "^11.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
 }
