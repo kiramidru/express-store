@@ -1,9 +1,9 @@
 import express from 'express'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 import { child, ref, get, set } from 'firebase/database'
-import db from '../database.js'
-import authenticateFirebaseToken from '../middleware/index.js' 
-import validateUserCreation from '../middleware/validateUserCreation.js'
+import db from '../firebase.js'
+import { admin, authenticateFirebaseToken } from '../middleware/index.js' 
+import validateUserCreation from '../middleware/validateUser.js'
 
 const router = express.Router()
 const auth = getAuth()
@@ -42,7 +42,11 @@ router.get('/user/:userId', async (req, res) => {
     const dbRef = ref(db)
 
     const snapshot = get(child(dbRef, `users/${userId}`)).then((snapshot) => {
-        res.status(200).json(snapshot.val())
+        if (snapshot.val()) {
+            res.status(200).json(snapshot.val())
+        } else {
+            res.status(404)
+        }
     }).catch((error) => {
         res.status(400).json(error)
     })
@@ -50,12 +54,17 @@ router.get('/user/:userId', async (req, res) => {
 
 router.post('/createUser', (req, res) => {
     const body = req.body
-
-    set(ref(db, 'users/' + body.userId), {
-        username: body.username,
-        email: body.email,
-    })
-    res.status(200).json(body)
+    const email = body.email
+    const password = body.password
+    try {
+        admin.auth().createUser({
+            email,
+            password
+        })
+        res.status(200).json(body)
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
 })
 
 

@@ -22,4 +22,4 @@ async function authenticateFirebaseToken(req, res, next) {
   }
 }
 
-export default authenticateFirebaseToken
+export { authenticateFirebaseToken, admin }
