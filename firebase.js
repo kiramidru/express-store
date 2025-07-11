@@ -1,6 +1,8 @@
 import 'dotenv/config'
 import { initializeApp } from 'firebase/app'
 import { getDatabase } from 'firebase/database'
+import admin from 'firebase-admin'
+import serviceAccount from './serviceAccountKey.json' with { type: "json" }
 
 const firebaseConfig = {
     apiKey: process.env.API_KEY,
@@ -14,6 +16,9 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
-const db = getDatabase(app);
+const db = getDatabase(app)
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+})
 
-export default db
+export { db, admin }
