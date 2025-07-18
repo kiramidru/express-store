@@ -10,8 +10,7 @@ const verifyToken = async (req, res, next) => {
 
     const idToken = authHeader.split("Bearer ")[1]
     admin.auth().verifyIdToken(idToken).then((claims) => {
-        if (claims.admin) {
-            req.user = decodedToken
+        if (claims.admin == true) {
             next()
         } else {
             res.status(400).json({ error: "Unauthorized"})
@@ -20,7 +19,6 @@ const verifyToken = async (req, res, next) => {
         console.error("Error verifying token: ", error)
         res.status(400).json({ error: "Unauthorized: Invalid token" })
     })
-
 }
 
 export { verifyToken }
