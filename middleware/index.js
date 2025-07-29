@@ -1,5 +1,30 @@
-import { admin } from '../firebase.js'
-import { validateUserCreation, validateUserRetrieval } from './user.js'
-import { verifyToken } from './auth.js'
+import { body, validationResult } from 'express-validator'
+import 'dotenv/config'
 
-export { validateUserCreation, validateUserRetrieval, verifyToken, admin }
+const validateUserCreation = [
+    body('email').isEmail().withMessage('Invalid email'),
+    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+
+    (req, res, next) => {
+        const err = validationResult(req)
+        if (!err.isEmpty()) {
+            return res.status(400).json({ errors: err.array() })
+        }
+        next()
+    },
+]
+
+const validateUserRetrieval = [
+    body('email').isEmail().withMessage('Invalid email'),
+
+    (req, res, next) => {
+        const err = validationResult(req)
+        if (!err.isEmpty()) {
+            return res.status(400).json({ errors: err.array() })
+        }
+        next()
+    }
+]
+
+
+export { validateUserCreation, validateUserRetrieval }

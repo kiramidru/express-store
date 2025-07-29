@@ -1,0 +1,6 @@
+1.  create users [admin, customer, seller]
+2. seller actions: brands, products, view orders
+3. admin actions: categories, sub categories, verify customer and seller accounts
+4. customer actions: create orders, view products, filter by category and sub category
+
+unverified accs can't create products
