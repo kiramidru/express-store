@@ -28,8 +28,10 @@ CREATE TABLE "Brand" (
     "description" TEXT,
     "logoUrl" TEXT,
     "websiteUrl" TEXT,
+    "userId" INTEGER,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "Brand_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -48,6 +50,7 @@ CREATE TABLE "Product" (
     "brandId" INTEGER NOT NULL,
     "userId" INTEGER,
     "categoryId" INTEGER,
+    "price" REAL NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
     CONSTRAINT "Product_brandId_fkey" FOREIGN KEY ("brandId") REFERENCES "Brand" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,

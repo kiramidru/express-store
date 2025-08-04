@@ -1,5 +1,5 @@
 import request from 'supertest'
-import app from '../app'
+import app from '../app.js'
 
 describe('GET /user/:userId', () => {
     it('should fetch a user if it exists', async () => {
@@ -12,3 +12,5 @@ describe('GET /user/:userId', () => {
         expect(response.statusCode).toBe(404)
     })
 })
+
+

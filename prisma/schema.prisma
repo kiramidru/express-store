@@ -16,11 +16,12 @@ model User {
     password     String
     role         Role           @default(CUSTOMER)
     verified     Boolean        @default(false)
+    RefreshToken RefreshToken[]
+    orders       Order[]
     createdAt    DateTime       @default(now())
     updatedAt    DateTime       @updatedAt
-    orders       Product[]
-    RefreshToken RefreshToken[]
-    Order        Order[]
+    Product      Product[]
+    Brand        Brand[]
 }
 
 model RefreshToken {
@@ -38,6 +39,8 @@ model Brand {
     description String?
     logoUrl     String?
     websiteUrl  String?
+    userId      Int?
+    user        User?     @relation(fields: [userId], references: [id])
     createdAt   DateTime  @default(now())
     updatedAt   DateTime  @updatedAt
     products    Product[]
@@ -59,10 +62,11 @@ model Product {
     brandId     Int
     brand       Brand     @relation(fields: [brandId], references: [id])
     userId      Int?
-    User        User?     @relation(fields: [userId], references: [id])
+    user        User?     @relation(fields: [userId], references: [id])
     categoryId  Int?
-    Category    Category? @relation(fields: [categoryId], references: [id])
-    Order       Order[]
+    category    Category? @relation(fields: [categoryId], references: [id])
+    order       Order[]
+    price       Float
     createdAt   DateTime  @default(now())
     updatedAt   DateTime  @updatedAt
 }

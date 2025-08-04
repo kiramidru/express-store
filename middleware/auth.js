@@ -20,6 +20,38 @@ const verifyToken = (req, res, next) => {
     })
 }
 
+const isAdmin = (req, res, next) => {
+    if (req.user?.role === 'ADMIN') {
+        next()
+    } else {
+        return res.status(403).json({ message: 'Access Denied: Admin Only' })
+    }
+}
+
+const isSeller = (req, res, next) => {
+    console.log(req.user.role)
+    if (req.user?.role === 'SELLER') {
+        next()
+    } else {
+        return res.status(403).json({ message: 'Acces Denied: Sellers Only' })
+    }
+}
+
+const isCustomer = (req, res, next) => {
+    if (req.user?.role === 'CUSTOMER') {
+        next()
+    } else {
+        return res.status(403).json({ message: 'Access Denied: Customers Only' })
+    }
+}
+
+const isVerified = (req, res, next) => {
+    if (req.user?.verified) {
+        next()
+    } else {
+        return res.status(403).json({ message: 'Access Denied: Account not verified' })
+    }
+}
 
 async function hashData(password) {
     const saltRounds = 12
@@ -42,4 +74,4 @@ async function verifyPassword(password, hashedPassword) {
     }
 }
 
-export { verifyToken, hashData, verifyPassword }
+export { verifyToken, isAdmin, isSeller, isCustomer, isVerified, hashData, verifyPassword }

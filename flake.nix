@@ -8,8 +8,7 @@
 
   outputs = { self, nixpkgs, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
+      let pkgs = nixpkgs.legacyPackages.${system};
       in {
         # enables use of `nix shell`
         devShells.default = pkgs.mkShell {
@@ -27,7 +26,6 @@
             export PRISMA_FMT_BINARY="${pkgs.prisma-engines}/bin/prisma-fmt"
           '';
         };
-      }
-    );
+      });
 }
 

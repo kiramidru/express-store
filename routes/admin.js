@@ -1,18 +1,17 @@
 import express from 'express'
-import { isAdminMiddleware } from '../middleware/admin.js'
+import { isAdmin, verifyToken } from '../middleware/auth.js'
 
 const router = express.Router()
 
-router.use(isAdminMiddleware)
+router.use(verifyToken)
+router.use(isAdmin)
 
-router.post('/admin/createCategory', async (req, res) => {
-    const name = req.body
+router.post('/category', async (req, res) => {
+    const name = req?.user.id
 
     try {
         const category = await prisma.category.create({
-            data: {
-                name: name
-            }
+            data: { name }
         })
         res.status(200).json(category)
     } catch (err) {
@@ -20,15 +19,12 @@ router.post('/admin/createCategory', async (req, res) => {
     }
 })
 
-router.post('/admin/createSubCategory', async (req, res) => {
-    const { name, parent } = req.body
+router.post('/subCategory', async (req, res) => {
+    const { name, parent } = req?.user.id
 
     try {
         const subCategory = await prisma.category.create({
-            data: {
-                name: name,
-                parent: parent
-            }
+            data: { name, parent }
         })
         res.status(200).json(subCategory)
     } catch (err) {
@@ -36,12 +32,12 @@ router.post('/admin/createSubCategory', async (req, res) => {
     }
 })
 
-router.post('/admin/verifyUser', async (req, res) => {
-    const { email } = req.body
+router.post('/verifyUser', async (req, res) => {
+    const userId = req?.user.id
 
     try {
         const user = await prisma.user.update({
-            where: { email: email },
+            where: { id: userId },
             data: {
                 verified: true
             }

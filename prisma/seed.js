@@ -16,7 +16,29 @@ async function main() {
             password: hashedPassword,
             role: 'ADMIN',
         },
-    });
+    })
+
+    await prisma.user.upsert({
+        where: { email: 'seller@example.com' },
+        update: {},
+        create: {
+            firstName: 'kira',
+            email: 'seller@example.com',
+            password: hashedPassword,
+            role: 'SELLER',
+        },
+    })
+
+    await prisma.user.upsert({
+        where: { email: 'customer@example.com' },
+        update: {},
+        create: {
+            firstName: 'kira',
+            email: 'customer@example.com',
+            password: hashedPassword,
+            role: 'CUSTOMER',
+        },
+    })
 
     console.log('✅ Seed data created.')
 }
