@@ -1,30 +1,17 @@
-import { body, validationResult } from 'express-validator'
-import 'dotenv/config'
+import {
+  verifyToken,
+  isAdmin,
+  isSeller,
+  isCustomer,
+  isVerified,
+} from "./auth.js";
+import { validateRequest } from "./validate.js";
 
-const validateUserCreation = [
-    body('email').isEmail().withMessage('Invalid email'),
-    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
-
-    (req, res, next) => {
-        const err = validationResult(req)
-        if (!err.isEmpty()) {
-            return res.status(400).json({ errors: err.array() })
-        }
-        next()
-    },
-]
-
-const validateUserRetrieval = [
-    body('email').isEmail().withMessage('Invalid email'),
-
-    (req, res, next) => {
-        const err = validationResult(req)
-        if (!err.isEmpty()) {
-            return res.status(400).json({ errors: err.array() })
-        }
-        next()
-    }
-]
-
-
-export { validateUserCreation, validateUserRetrieval }
+export {
+  verifyToken,
+  isAdmin,
+  isSeller,
+  isCustomer,
+  isVerified,
+  validateRequest,
+};

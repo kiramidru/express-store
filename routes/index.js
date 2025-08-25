@@ -1,15 +1,15 @@
-import express from 'express'
+import express from "express";
 
-import auth from './auth.js'
-import admin from './admin.js'
-import seller from './seller.js'
-import customer from './customer.js'
+import auth from "./auth.route.js";
+import admin from "./admin.route.js";
+import seller from "./seller.route.js";
+import customer from "./customer.route.js";
 
-const router = express.Router()
+const router = express.Router();
 
-router.use('/', auth)
-router.use('/admin', admin)
-router.use('/seller', seller)
-router.use('/customer', customer)
+router.use("/", auth);
+router.use("/admin", admin);
+router.use("/seller", seller);
+router.use("/customer", customer);
 
-export default router
+export default router;

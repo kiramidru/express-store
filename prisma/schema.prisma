@@ -1,89 +1,100 @@
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["driverAdapters"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = "file:./dev.db"
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
-    id           Int            @id @default(autoincrement())
-    email        String         @unique
-    firstName    String
-    lastName     String?
-    password     String
-    role         Role           @default(CUSTOMER)
-    verified     Boolean        @default(false)
-    RefreshToken RefreshToken[]
-    orders       Order[]
-    createdAt    DateTime       @default(now())
-    updatedAt    DateTime       @updatedAt
-    Product      Product[]
-    Brand        Brand[]
+  id              Int            @id @default(autoincrement())
+  userId      Int         @unique
+  username     String
+  firstName    String
+  lastName     String?
+  photoUrl     String?
+  role         Role           @default(CUSTOMER)
+  verified     Boolean        @default(false)
+  RefreshToken RefreshToken[]
+  orders       Order[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Product      Product[]
+  Brand        Brand[]
 }
 
 model RefreshToken {
-    id        Int      @id @default(autoincrement())
-    tokenHash String
-    userId    Int
-    user      User     @relation(fields: [userId], references: [id])
-    createdAt DateTime @default(now())
-    expiresAt DateTime
+  id        Int      @id @default(autoincrement())
+  tokenHash String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
 }
 
 model Brand {
-    id          Int       @id @default(autoincrement())
-    name        String    @unique
-    description String?
-    logoUrl     String?
-    websiteUrl  String?
-    userId      Int?
-    user        User?     @relation(fields: [userId], references: [id])
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
-    products    Product[]
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String?
+  logoUrl     String?
+  websiteUrl  String?
+  sellerId    Int
+  seller      User      @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Category {
-    id            Int        @id @default(autoincrement())
-    name          String     @unique
-    parentId      Int?
-    parent        Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
-    subCategories Category[] @relation("CategoryHierarchy")
-    products      Product[]
+  id            Int        @id @default(autoincrement())
+  name          String     @unique
+  parentId      Int?
+  parent        Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  subCategories Category[] @relation("CategoryHierarchy")
+  products      Product[]
 }
 
 model Product {
-    id          Int       @id @default(autoincrement())
-    name        String    @unique
-    description String?
-    brandId     Int
-    brand       Brand     @relation(fields: [brandId], references: [id])
-    userId      Int?
-    user        User?     @relation(fields: [userId], references: [id])
-    categoryId  Int?
-    category    Category? @relation(fields: [categoryId], references: [id])
-    order       Order[]
-    price       Float
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String?
+  brandId     Int?
+  brand       Brand?    @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  sellerId    Int
+  seller      User      @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  categoryId  Int?
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  order       Order[]
+  amount      Int
+  price       Float
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Order {
-    id              Int      @id @default(autoincrement())
-    userId          Int
-    user            User     @relation(fields: [userId], references: [id])
-    productId       Int
-    product         Product  @relation(fields: [productId], references: [id])
-    quantity        Int      @default(1)
-    priceAtPurchase Float
-    createdAt       DateTime @default(now())
+  id              Int      @id @default(autoincrement())
+  customerId      Int
+  customer        User     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  productId       Int
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  amount          Int      @default(1)
+  priceAtPurchase Float
+  status          Status   @default(PENDING)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now())
 }
 
 enum Role {
-    CUSTOMER
-    SELLER
-    ADMIN
+  CUSTOMER
+  SELLER
+  ADMIN
+}
+
+enum Status {
+  PENDING
+  PROCESSING
+  SHIPPED
+  CANCELLED
 }
